@@ -1,0 +1,10 @@
+# virtual environemnt
+venv/
+
+# Unwanted files
+.vscode/
+venms/test_data.json
+SECRET
+
+# Database
+venms/db.sqlite3

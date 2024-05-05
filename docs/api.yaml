@@ -1,0 +1,266 @@
+openapi: 3.0.0
+info:
+  title: Vendor Management API
+  description: API documentation for managing vendors and purchase orders
+  version: 1.0.0
+
+paths:
+  /home:
+    get:
+      summary: Get Home Page
+      responses:
+        '200':
+          description: Home page retrieved successfully
+
+  /vendors:
+    get:
+      summary: Get all vendors
+      responses:
+        '200':
+          description: List of vendors retrieved successfully
+    post:
+      summary: Create a new vendor
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: Name of the vendor
+                contact_details:
+                  type: string
+                  description: Contact details of the vendor
+                address:
+                  type: string
+                  description: Address of the vendor
+                vendor_code:
+                  type: string
+                  description: Unique identifier for the vendor
+      responses:
+        '201':
+          description: Vendor created successfully
+        '206':
+          description: Mandatory fields missing
+        '400':
+          description: Inconsistent data posted
+        '409':
+          description: Vendor ID already occupied
+
+  /vendors/{vendor_code}:
+    get:
+      summary: Get details of a vendor
+      parameters:
+        - in: path
+          name: vendor_code
+          required: true
+          description: Vendor code
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Details of the vendor retrieved successfully
+        '404':
+          description: Vendor not found
+    post:
+      summary: Update details of a vendor
+      parameters:
+        - in: path
+          name: vendor_code
+          required: true
+          description: Vendor code
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: Name of the vendor
+                contact_details:
+                  type: string
+                  description: Contact details of the vendor
+                address:
+                  type: string
+                  description: Address of the vendor
+      responses:
+        '200':
+          description: Vendor details updated successfully
+        '400':
+          description: Inconsistent data posted
+        '403':
+          description: Vendor code can't be changed
+        '404':
+          description: Vendor ID not present
+        '405':
+          description: Invalid request
+    delete:
+      summary: Delete a vendor
+      parameters:
+        - in: path
+          name: vendor_code
+          required: true
+          description: Vendor code
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Vendor deleted successfully
+        '404':
+          description: Vendor not found
+
+  /purchase_orders:
+    get:
+      summary: Get purchase orders by vendor ID
+      parameters:
+        - in: query
+          name: vendor_id
+          required: true
+          description: Vendor ID
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Purchase orders retrieved successfully
+        '400':
+          description: Null vendor ID
+        '404':
+          description: No records found for the vendor
+    post:
+      summary: Create a new purchase order
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                po_number:
+                  type: string
+                  description: Unique identifier for the purchase order
+                vendor:
+                  type: string
+                  description: Vendor code
+                order_date:
+                  type: string
+                  format: date
+                  description: Date when the order was placed
+                delivery_date:
+                  type: string
+                  format: date
+                  description: Expected or actual delivery date of the order
+                items:
+                  type: string
+                  description: Details of items ordered
+                status:
+                  type: string
+                  description: Current status of the PO (e.g., pending, completed, canceled)
+                quality_rating:
+                  type: number
+                  description: Rating given to the vendor for this PO (nullable)
+                issue_date:
+                  type: string
+                  format: date
+                  description: Timestamp when the PO was issued to the vendor
+      responses:
+        '200':
+          description: PO created successfully
+        '206':
+          description: Mandatory fields missing
+        '400':
+          description: Inconsistent data posted
+        '404':
+          description: Vendor ID not present
+        '409':
+          description: PO ID already occupied
+
+  /purchase_orders/{po_id}:
+    get:
+      summary: Get details of a purchase order
+      parameters:
+        - in: path
+          name: po_id
+          required: true
+          description: Purchase order ID
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Details of the purchase order retrieved successfully
+        '404':
+          description: Purchase order not found
+    post:
+      summary: Update details of a purchase order
+      parameters:
+        - in: path
+          name: po_id
+          required: true
+          description: Purchase order ID
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                vendor:
+                  type: string
+                  description: Vendor code
+                order_date:
+                  type: string
+                  format: date
+                  description: Date when the order was placed
+                delivery_date:
+                  type: string
+                  format: date
+                  description: Expected or actual delivery date of the order
+                items:
+                  type: string
+                  description: Details of items ordered
+                status:
+                  type: string
+                  description: Current status of the PO (e.g., pending, completed, canceled)
+                quality_rating:
+                  type: number
+                  description: Rating given to the vendor for this PO (nullable)
+                issue_date:
+                  type: string
+                  format: date
+                  description: Timestamp when the PO was issued to the vendor
+      responses:
+        '200':
+          description: Purchase order details updated successfully
+        '400':
+          description: Inconsistent data posted
+        '403':
+          description: PO number can't be updated
+        '404':
+          description: Vendor ID not present
+        '405':
+          description: Invalid request
+    delete:
+      summary: Delete a purchase order
+      parameters:
+        - in: path
+          name: po_id
+          required: true
+          description: Purchase order ID
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Purchase order deleted successfully
+        '404':
+          description: Purchase order not found
+servers:
+  # Added by API Auto Mocking Plugin
+  - description: SwaggerHub API Auto Mocking
+    url: https://virtserver.swaggerhub.com/SAGNIKJAL00/VenMS/1.0.0
